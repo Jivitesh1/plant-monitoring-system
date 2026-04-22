@@ -8,17 +8,64 @@ The following components are required for making the project
 7. Jumper wires
 8. power supply 5v (can use a lm2596 regulator set at 5v) or a power bank
 9. water pump(optional)
+Required Libraries
 
-The connections to be made as per shown circuit diagram or as per set pin numbers in the code.
-if changing the pins, make sure to select appropriate GPIO pins.
+Install the following libraries in Arduino IDE or PlatformIO:
 
-For IoT connectivity, one needs to download the Blynk IoT application onto their smartphone.
-once done, create a project in the app, add:
-  1. any form of display to monitor current sensor stats
-  2. any form of light(indicator) that shows current water pump status
-  3. a switch to manually control the water pump remotely.
-  4. a slider to set soil moisture level to be maintained.
+Blynk (latest version compatible with Blynk IoT)
+DHT sensor library
+Adafruit GFX
+Adafruit SSD1306
+Wire (usually pre-installed)
 
-once done, they must be assigned appropriate vpins, and same vpins must be used in the code.
-copy the header from blynk and paste it on the very top of your code to link the blynk dashboard with your code and MCU.
-  
+Make sure your ESP32 board package is properly installed and updated.
+
+Blynk Dashboard Setup
+Create a new template in Blynk
+Set hardware as ESP32
+Note down the Auth Token
+Create a device from the template
+Add the following widgets and assign virtual pins:
+Widget Type	Virtual Pin	Purpose
+Gauge / Display	V0	Soil Moisture (%)
+Gauge / Display	V1	Temperature (°C)
+Gauge / Display	V2	Humidity (%)
+Switch	V3	Pump Manual Control
+Configure the switch (V3):
+Mode: Switch
+Output: 0 / 1
+Upload the code and connect the ESP32 to WiFi
+Once connected, data should start appearing on the dashboard
+Calibration (Important)
+Soil Moisture Sensor
+
+This sensor requires calibration for accurate operation.
+
+Steps:
+
+Insert sensor into dry soil → note the value
+Insert sensor into wet soil → note the value
+Update the mapping function in code accordingly
+
+Without calibration, the system may overwater or underwater.
+
+Temperature & Humidity Sensor
+The DHT11 works for basic monitoring
+For better accuracy, consider upgrading to DHT22
+Avoid placing the sensor too close to heat sources or water
+Circuit & System Understanding
+Refer to the circuit diagram in the repository for wiring connections
+Refer to the block diagram to understand data flow and system logic
+
+Basic flow:
+
+Sensors → ESP32 → Decision logic → Relay → Pump
+Data → OLED display + Blynk app
+Power Considerations
+Use a stable DC-DC regulator for the ESP32
+Avoid powering the pump directly from the ESP32
+Ensure proper grounding between all components
+Final Notes
+Verify sensor readings before relying on automation
+Test relay operation separately before connecting the pump
+Start with manual control before enabling full automation
